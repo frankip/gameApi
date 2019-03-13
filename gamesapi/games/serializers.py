@@ -8,7 +8,7 @@ class GameSerializer(serializers.Serializer):
     played  = serializers.BooleanField(required=False)
 
     def create(self, validated_data):
-        return Game.objects.create(**validated_date)
+        return Game.objects.create(**validated_data)
 
     def update(self, instance, validated_date):
         instance.name = validated_data.get('name', intsance.name)
