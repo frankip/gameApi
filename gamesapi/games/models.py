@@ -2,19 +2,19 @@ from django.db import models
 
 # Create your models here.
 class GameCategory(models.Model): 
-    name = models.CharField(max_length=200) 
- 
+    name = models.CharField(max_length=200, unique=True)
+
     class Meta: 
-        ordering = ('name',) 
+        ordering = ('name',)
  
-    def __str__(self): 
+    def __str__(self):
         return self.name
 class Game (models.Model):
     """
     Game class model that handles all db field
     """
     created = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     release_date = models.DateTimeField()
     game_category = models.ForeignKey(
         GameCategory,
@@ -29,38 +29,38 @@ class Game (models.Model):
     def __str__(self): 
         return self.name 
 
-class Player(models.Model): 
-    MALE = 'M' 
-    FEMALE = 'F' 
-    GENDER_CHOICES = ( 
-         (MALE, 'Male'), 
-         (FEMALE, 'Female'), 
+class Player(models.Model):
+    MALE = 'M'
+    FEMALE = 'F'
+    GENDER_CHOICES = (
+         (MALE, 'Male'),
+         (FEMALE, 'Female'),
     ) 
     created = models.DateTimeField(auto_now_add=True) 
-    name = models.CharField(max_length=50, blank=False, default='') 
-    gender = models.CharField( 
-        max_length=2, 
-        choices=GENDER_CHOICES, 
-        default=MALE, 
+    name = models.CharField(max_length=50, blank=False, default='', unique=True)
+    gender = models.CharField(
+        max_length=2,
+        choices=GENDER_CHOICES,
+        default=MALE,
     ) 
- 
-    class Meta: 
-        ordering = ('name',) 
- 
-    def __str__(self): 
-        return self.name 
 
-class PlayerScore(models.Model): 
-    player = models.ForeignKey( 
-        Player,  
-        related_name='scores',  
-        on_delete=models.CASCADE) 
-    game = models.ForeignKey( 
-        Game,  
-        on_delete=models.CASCADE) 
-    score = models.IntegerField() 
-    score_date = models.DateTimeField() 
- 
     class Meta: 
-        # Order by score descending 
-        ordering = ('-score',) 
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+class PlayerScore(models.Model):
+    player = models.ForeignKey(
+        Player,
+        related_name='scores',
+        on_delete=models.CASCADE)
+    game = models.ForeignKey(
+        Game,
+        on_delete=models.CASCADE)
+    score = models.IntegerField()
+    score_date = models.DateTimeField()
+
+    class Meta: 
+        # Order by score descending
+        ordering = ('-score',)
