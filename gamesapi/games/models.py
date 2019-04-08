@@ -1,18 +1,26 @@
 from django.db import models
 
+
 # Create your models here.
-class GameCategory(models.Model): 
+class GameCategory(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
-    class Meta: 
+    class Meta:
         ordering = ('name',)
- 
+
     def __str__(self):
         return self.name
+
+
 class Game (models.Model):
     """
     Game class model that handles all db field
     """
+    owner = models.ForeignKey(
+        'auth.User',
+        related_name='games',
+        on_delete=models.CASCADE
+    )
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=200, unique=True)
     release_date = models.DateTimeField()
@@ -26,8 +34,9 @@ class Game (models.Model):
     class Meta:
         ordering = ('name',)
 
-    def __str__(self): 
-        return self.name 
+    def __str__(self):
+        return self.name
+
 
 class Player(models.Model):
     MALE = 'M'
@@ -35,20 +44,21 @@ class Player(models.Model):
     GENDER_CHOICES = (
          (MALE, 'Male'),
          (FEMALE, 'Female'),
-    ) 
-    created = models.DateTimeField(auto_now_add=True) 
+    )
+    created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=50, blank=False, default='', unique=True)
     gender = models.CharField(
         max_length=2,
         choices=GENDER_CHOICES,
         default=MALE,
-    ) 
+    )
 
-    class Meta: 
+    class Meta:
         ordering = ('name',)
 
     def __str__(self):
         return self.name
+
 
 class PlayerScore(models.Model):
     player = models.ForeignKey(
@@ -61,6 +71,6 @@ class PlayerScore(models.Model):
     score = models.IntegerField()
     score_date = models.DateTimeField()
 
-    class Meta: 
+    class Meta:
         # Order by score descending
         ordering = ('-score',)
