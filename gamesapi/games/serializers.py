@@ -67,6 +67,7 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
         model = Game
         fields = (
             'url',
+            'owner',
             'game_category',
             'name',
             'release_date',
@@ -76,7 +77,8 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
 class ScoreSerializer(serializers.HyperlinkedModelSerializer):
     # We want to display all the details for the game 
     game = GameSerializer()
-    # We don't include the player because it will be nested in the player 
+    # We don't include the player because it will be nested in the player
+
     class Meta: 
         model = PlayerScore
         fields = (
@@ -88,6 +90,7 @@ class ScoreSerializer(serializers.HyperlinkedModelSerializer):
             'game',
             )
 
+
 class PlayerSerializer(serializers.HyperlinkedModelSerializer):
     scores = ScoreSerializer(many=True, read_only=True)
     gender = serializers.ChoiceField(
@@ -95,7 +98,7 @@ class PlayerSerializer(serializers.HyperlinkedModelSerializer):
     gender_description = serializers.CharField(
         source='get_gender_display',
         read_only=True)
- 
+
     class Meta: 
         model = Player 
         fields = (
@@ -105,13 +108,14 @@ class PlayerSerializer(serializers.HyperlinkedModelSerializer):
             'gender_description',
             'scores',
             )
-            
+
+
 class PlayerScoreSerializer(serializers.ModelSerializer):
     player = serializers.SlugRelatedField(queryset=Player.objects.all(), slug_field='name')
     # We want to display the game's name instead of the id
     game = serializers.SlugRelatedField(queryset=Game.objects.all(), slug_field='name')
 
-    class Meta: 
+    class Meta:
         model = PlayerScore 
         fields = (
             'url',

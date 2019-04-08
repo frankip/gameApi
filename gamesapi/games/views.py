@@ -53,7 +53,7 @@ from games.models import (
     Player,
     PlayerScore)
 from games.serializers import(
-    userSerializer,
+    UserSerializer,
     GameCategorySerializer,
     GameSerializer,
     PlayerSerializer,
@@ -63,7 +63,9 @@ from rest_framework.response import Response
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
-    GenericAPIView
+    GenericAPIView,
+    ListAPIView,
+    RetrieveAPIView
 )
 from rest_framework.reverse import reverse
 from django.contrib.auth.models import User
@@ -71,13 +73,13 @@ from rest_framework import permissions
 from games.permissions import IsOwnerOrReadOnly
 
 
-class UserList(generics.ListAPIView):
+class UserList(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     name = 'user-list'
 
 
-class UserDetail(generic.RetrieveAPIView):
+class UserDetail(RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer 
     name = 'user-detail'
@@ -98,6 +100,10 @@ class GameList(ListCreateAPIView):
     queryset = Game.objects.all() 
     serializer_class = GameSerializer 
     name = 'game-list'
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        IsOwnerOrReadOnly,
+    )
 
     def perform_create(self, serializer):
         # Pass an additional owner field to the create method 
@@ -109,6 +115,10 @@ class GameDetail(RetrieveUpdateDestroyAPIView):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
     name = 'game-detail'
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        IsOwnerOrReadOnly,
+    )
 
 class PlayerList(ListCreateAPIView): 
     queryset = Player.objects.all() 
