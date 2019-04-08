@@ -53,6 +53,7 @@ from games.models import (
     Player,
     PlayerScore)
 from games.serializers import(
+    userSerializer,
     GameCategorySerializer,
     GameSerializer,
     PlayerSerializer,
@@ -65,6 +66,22 @@ from rest_framework.generics import (
     GenericAPIView
 )
 from rest_framework.reverse import reverse
+from django.contrib.auth.models import User
+from rest_framework import permissions
+from games.permissions import IsOwnerOrReadOnly
+
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    name = 'user-list'
+
+
+class UserDetail(generic.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer 
+    name = 'user-detail'
+
 
 class GameCategoryList(ListCreateAPIView):
     queryset = GameCategory.objects.all() 
@@ -76,10 +93,17 @@ class GameCategoryDetail(RetrieveUpdateDestroyAPIView):
     serializer_class = GameCategorySerializer
     name = 'gamecategory-detail'
 
+
 class GameList(ListCreateAPIView):
     queryset = Game.objects.all() 
     serializer_class = GameSerializer 
     name = 'game-list'
+
+    def perform_create(self, serializer):
+        # Pass an additional owner field to the create method 
+        # To Set the owner to the user received in the request
+        serializer.save(owner=self.request.user)
+
 
 class GameDetail(RetrieveUpdateDestroyAPIView):
     queryset = Game.objects.all()
@@ -115,6 +139,7 @@ class ApiRoot(GenericAPIView):
             'players': reverse(PlayerList.name, request=request),
             'game-categories': reverse(GameCategoryList.name, request=request),
             'games': reverse(GameList.name, request=request),
-            'scores': reverse(PlayerScoreList.name, request=request)
+            'scores': reverse(PlayerScoreList.name, request=request),
+            'users': reverse(UserList.name, request=request)
         })
         

@@ -9,6 +9,8 @@ from games.views import (
     PlayerDetail,
     PlayerScoreList,
     PlayerScoreDetail,
+    UserList,
+    UserDetail,
     ApiRoot
 )
 
@@ -21,6 +23,8 @@ urlpatterns = [
     path('players/<int:pk>/', PlayerDetail.as_view(), name=PlayerDetail.name),
     path('player-scores', PlayerScoreList.as_view(), name=PlayerScoreList.name),
     path('player-scores/<int:pk>/', PlayerScoreDetail.as_view(), name=PlayerScoreDetail.name),
+    path('users', UserList.as_view(), name=UserList.name),
+    path('users/<int:pk>/', UserDetail.as_view(), name=UserDetail.name),
     path('', ApiRoot.as_view(), name=ApiRoot.name),
 
 ]
