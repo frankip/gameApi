@@ -70,6 +70,7 @@ from rest_framework.generics import (
 from rest_framework.reverse import reverse
 from django.contrib.auth.models import User
 from rest_framework import permissions
+from rest_framework.throttling import ScopedRateThrottle
 from games.permissions import IsOwnerOrReadOnly
 
 
@@ -89,11 +90,15 @@ class GameCategoryList(ListCreateAPIView):
     queryset = GameCategory.objects.all() 
     serializer_class = GameCategorySerializer
     name = 'gamecategory-list'
+    throttle_scope = 'game-categories'
+    throttle_class = (ScopedRateThrottle)
 
 class GameCategoryDetail(RetrieveUpdateDestroyAPIView):
     queryset = GameCategory.objects.all()
     serializer_class = GameCategorySerializer
     name = 'gamecategory-detail'
+    throttle_scope = 'game-categories'
+    throttle_class = (ScopedRateThrottle)
 
 
 class GameList(ListCreateAPIView):
