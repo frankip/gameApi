@@ -46,6 +46,13 @@
 #         return Response(status=status.HTTP_204_NO_CONTENT) 
 
 """ Class based views"""
+import django_filters
+from rest_framework.reverse import reverse
+from django.contrib.auth.models import User
+from rest_framework import permissions
+from rest_framework.throttling import ScopedRateThrottle
+from rest_framework import filters 
+from django_filters import NumberFilter, DateTimeFilter, AllValuesFilter 
 
 from games.models import (
     GameCategory,
@@ -67,10 +74,7 @@ from rest_framework.generics import (
     ListAPIView,
     RetrieveAPIView
 )
-from rest_framework.reverse import reverse
-from django.contrib.auth.models import User
-from rest_framework import permissions
-from rest_framework.throttling import ScopedRateThrottle
+
 from games.permissions import IsOwnerOrReadOnly
 
 
@@ -92,6 +96,9 @@ class GameCategoryList(ListCreateAPIView):
     name = 'gamecategory-list'
     throttle_scope = 'game-categories'
     throttle_class = (ScopedRateThrottle)
+    filter_fields = ('name',)
+    search_fields = ('^name',)
+    ordering_fields = ('name',)
 
 class GameCategoryDetail(RetrieveUpdateDestroyAPIView):
     queryset = GameCategory.objects.all()
@@ -109,6 +116,15 @@ class GameList(ListCreateAPIView):
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly,
     )
+    filter_fields = (
+        'name',
+        'game_category',
+        'release_date',
+        'played',
+        'owner',
+        )
+    search_fields = ('^name',)
+    ordering_fields = ('name', 'release_date')
 
     def perform_create(self, serializer):
         # Pass an additional owner field to the create method 
@@ -128,19 +144,45 @@ class GameDetail(RetrieveUpdateDestroyAPIView):
 class PlayerList(ListCreateAPIView): 
     queryset = Player.objects.all() 
     serializer_class = PlayerSerializer 
-    name = 'player-list' 
- 
- 
+    name = 'player-list'
+    filter_fields = ('name', 'gender',)
+    search_fields = ('^name',)
+    ordering_fields = ('name',)
+
+
 class PlayerDetail(RetrieveUpdateDestroyAPIView): 
     queryset = Player.objects.all() 
     serializer_class = PlayerSerializer 
-    name = 'player-detail' 
- 
- 
+    name = 'player-detail'
+
+class PlayerScoreFilter(django_filters.FilterSet):
+    min_score = NumberFilter(field_name='score', lookup_expr='gte')
+    max_score = NumberFilter(field_name='score', lookup_expr='lte')
+    from_score_date = DateTimeFilter(field_name='score_date', lookup_expr='gte')
+    to_score_date = DateTimeFilter(field_name='score_date', lookup_expr='lte')
+    player_name = AllValuesFilter(field_name='player__name')
+    game_name = AllValuesFilter(field_name='game__name')
+
+    class Meta:
+        model = PlayerScore 
+        fields = (
+            'score',
+            'from_score_date',
+            'to_score_date',
+            'min_score',
+            'max_score',
+            # #player__name will be accessed as player_name 
+            'player_name',
+            # #game__name will be accessed as game_name 
+            'game_name',
+            ) 
+
 class PlayerScoreList(ListCreateAPIView): 
     queryset = PlayerScore.objects.all() 
     serializer_class = PlayerScoreSerializer 
-    name = 'playerscore-list' 
+    name = 'playerscore-list'
+    filter_class = PlayerScoreFilter
+    ordering_fields = ('score', 'score_date',)
 
 class PlayerScoreDetail(RetrieveUpdateDestroyAPIView): 
     queryset = PlayerScore.objects.all() 
