@@ -16,7 +16,7 @@ class Game (models.Model):
     """
     Game class model that handles all db field
     """
-    owner = models.ForeignKey(
+    player = models.ForeignKey(
         'auth.User',
         related_name='games',
         on_delete=models.CASCADE
@@ -61,7 +61,7 @@ class Player(models.Model):
 
 
 class PlayerScore(models.Model):
-    owner = models.ForeignKey(
+    player = models.ForeignKey(
         Player,
         related_name='scores',
         on_delete=models.CASCADE)

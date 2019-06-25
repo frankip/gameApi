@@ -59,7 +59,7 @@ class GameCategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class GameSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
+    player = serializers.ReadOnlyField(source='player.username')
     # We want to display the game cagory's name instead of the id 
     game_category = serializers.SlugRelatedField(queryset=GameCategory.objects.all(), slug_field='name') 
 
@@ -67,7 +67,7 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
         model = Game
         fields = (
             'url',
-            'owner',
+            'player',
             'game_category',
             'name',
             'release_date',
@@ -83,7 +83,7 @@ class ScoreSerializer(serializers.HyperlinkedModelSerializer):
         model = PlayerScore
         fields = (
             'url',
-            'owner',
+            'player',
             'pk',
             'score',
             'score_date',
