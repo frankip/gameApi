@@ -61,7 +61,7 @@ class Player(models.Model):
 
 
 class PlayerScore(models.Model):
-    player = models.ForeignKey(
+    owner = models.ForeignKey(
         Player,
         related_name='scores',
         on_delete=models.CASCADE)

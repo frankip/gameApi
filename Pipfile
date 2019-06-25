@@ -11,6 +11,7 @@ djangorestframework = "*"
 [dev-packages]
 "flake8" = "*"
 "pep8" = "*"
+yapf = "*"
 
 [requires]
 python_version = "3.7"
