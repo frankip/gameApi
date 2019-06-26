@@ -9,6 +9,8 @@ djangorestframework = "*"
 "psycopg2" = "*"
 django-filter = "*"
 django-crispy-forms = "*"
+coverage = "*"
+django-nose = "*"
 
 [dev-packages]
 "flake8" = "*"
