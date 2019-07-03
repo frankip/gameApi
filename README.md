@@ -8,7 +8,25 @@ on postgres Database. It can track Games under a game category, Playes who have 
 - Pipenv
 - Djangorestframework
 
+## How to Set Up
 
+- clone the repo to your local machine 
+    `git clone https://github.com/frankip/gameApi.git`
+- Setup a virtual enviroment and install the dependendencies
+    `pip install -r requirements.txt` or `pipenv install requirements.txt`
+
+- in the settings file under Databases, change the name user and passwor to your desired credentials
+
+- Set up migrations
+    `python manage.py makemigrations`
+
+- Migrate to create tables
+    `python manage.py migrate`
+
+- start the development server
+    ``python manage.py runserver`
+
+    
 | HTTP verb | Scope | Semantics |
 |----------:|-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | GET | Collection of game categories | Retrieve all the stored game categories in the collection, sorted by their name in ascending order. Each game category must include a list of URLs for each game resource that belongs to the category. |
@@ -35,3 +53,4 @@ on postgres Database. It can track Games under a game category, Playes who have 
 | PUT | Score | Update an existing score. |
 | PATCH | Score | Update one or more fields of an existing score. |
 | DELETE | Score | Delete an existing score. |
+

@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,12 +35,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Django REST Framework 
-    'rest_framework', 
-    # Games application 
+    # Django REST Framework
+    'rest_framework',
+    # Games application
     'games.apps.GamesConfig',
     'django_filters',
-    # Crispy forms 
+    # Crispy forms
     'crispy_forms',
     # Django nose
     'django_nose',
@@ -78,46 +76,47 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gamesapi.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql', 
-        # Replace games with your desired database name 
-        'NAME': 'games', 
-        # Replace username with your desired user name 
-        'USER': '', 
-        # Replace password with your desired password 
-        'PASSWORD': '', 
-        # Replace 127.0.0.1 with the PostgreSQL host 
-        'HOST': '127.0.0.1', 
-        # Replace 5432 with the PostgreSQL configured port 
-        # in case you aren't using the default port 
-        'PORT': '5432', 
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        # Replace games with your desired database name
+        'NAME': 'games',
+        # Replace username with your desired user name
+        'USER': '',
+        # Replace password with your desired password
+        'PASSWORD': '',
+        # Replace 127.0.0.1 with the PostgreSQL host
+        'HOST': '127.0.0.1',
+        # Replace 5432 with the PostgreSQL configured port
+        # in case you aren't using the default port
+        'PORT': '5432',
+    }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -132,20 +131,21 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'games.pagination.LimitOffsetPaginationWithMaxLimit',
-    'PAGE_SIZE': 5,
-    'DEFAULT_FILTER_BACKENDS': ( 
-        'django_filters.rest_framework.DjangoFilterBackend', 
-        'rest_framework.filters.SearchFilter', 
-        'rest_framework.filters.OrderingFilter', 
-        ), 
+    'DEFAULT_PAGINATION_CLASS':
+    'games.pagination.LimitOffsetPaginationWithMaxLimit',
+    'PAGE_SIZE':
+    5,
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
@@ -164,10 +164,20 @@ REST_FRAMEWORK = {
 # Use nose to run tests
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
-# We want nose to measure coverage on the games app 
-NOSE_ARGS = [ 
-    '--with-coverage', 
-    '--cover-erase', 
-    '--cover-inclusive', 
-    '--cover-package=games', 
+# We want nose to measure coverage on the games app
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-erase',
+    '--cover-inclusive',
+    '--cover-package=games',
 ]
+
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+STATIC_URL = '/static/'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'), )
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
